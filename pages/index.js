@@ -34,6 +34,12 @@ export default function Home() {
                   </CardContent>
                 </CardActionArea>
               </NextLink>
+              <CardActions>
+                <Typography>${product.price}</Typography>
+                <Button size='small' color='primary'>
+                  Add to cart
+                </Button>
+              </CardActions>
             </Card>
           </Grid>
         ))}
