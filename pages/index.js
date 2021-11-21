@@ -10,12 +10,13 @@ import {
 } from '@material-ui/core';
 
 import NextLink from 'next/link';
+import Layout from '../components/Layout/Layout';
 
 import data from '../utils/data';
 
 export default function Home() {
   return (
-    <div>
+    <Layout>
       <h1>Products</h1>
       <Grid container spacing={3}>
         {data.products.map((product) => (
@@ -37,6 +38,6 @@ export default function Home() {
           </Grid>
         ))}
       </Grid>
-    </div>
+    </Layout>
   );
 }

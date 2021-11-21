@@ -10,13 +10,14 @@ import {
 import useStyles from '../../utils/style';
 import NextLink from 'next/link';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, title, description }) => {
   const classes = useStyles();
 
   return (
     <div>
       <Head>
-        <title>Amazona</title>
+        <title>{title ? `${title} - Amazona` : 'Amazona'}</title>
+        {description && <meta name='description' content={description}></meta>}
       </Head>
       <AppBar position='static' className={classes.navbar}>
         <Toolbar>
