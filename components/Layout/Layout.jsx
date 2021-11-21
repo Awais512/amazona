@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Head from 'next/head';
 import {
   AppBar,
@@ -7,14 +7,50 @@ import {
   Link,
   Toolbar,
   Typography,
+  createTheme,
+  Switch,
 } from '@material-ui/core';
 import NextLink from 'next/link';
 
 import useStyles from '../../utils/style';
-import { theme } from '../../utils/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { Store } from '../../utils/store';
+import Cookies from 'js-cookie';
 
 const Layout = ({ children, title, description }) => {
+  const { state, dispatch } = useContext(Store);
+  const { darkMode } = state;
+
+  const darkModeChangeHandler = () => {
+    dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' });
+    const newDarkMode = !darkMode;
+    Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
+  };
+
+  const theme = createTheme({
+    typography: {
+      h1: {
+        fontSize: '1.6rem',
+        fontWeight: 400,
+        margin: '1rem 0',
+      },
+      h2: {
+        fontSize: '1.4rem',
+        fontWeight: 400,
+        margin: '1rem 0',
+      },
+    },
+    palette: {
+      type: darkMode ? 'dark' : 'light',
+      primary: {
+        main: '#f0c000',
+      },
+      secondary: {
+        main: '#208080',
+      },
+    },
+  });
+
   const classes = useStyles();
 
   return (
@@ -34,6 +70,10 @@ const Layout = ({ children, title, description }) => {
             </NextLink>
             <div className={classes.grow}></div>
             <div>
+              <Switch
+                checked={darkMode}
+                onChange={darkModeChangeHandler}
+              ></Switch>
               <NextLink href='/cart' passHref>
                 <Link>Cart</Link>
               </NextLink>
