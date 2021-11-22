@@ -1,6 +1,4 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import data from '../../utils/data';
+import React, { useContext } from 'react';
 import Layout from '../../components/Layout/Layout';
 import NextLink from 'next/link';
 import {
@@ -16,12 +14,24 @@ import useStyles from '../../utils/style';
 import Image from 'next/image';
 import Product from '../../models/Product';
 import db from '../../utils/db';
+import axios from 'axios';
+import { Store } from '../../utils/store';
 
 export default function ProductScreen({ product }) {
+  const { dispatch } = useContext(Store);
   const classes = useStyles();
   if (!product) {
     return <div>Product Not Found</div>;
   }
+
+  const addToCart = async () => {
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock <= 0) {
+      window.alert('Sorry, Product is Out of Stock');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity: 1 } });
+  };
   return (
     <Layout title={product.name} description={product.description}>
       <div className={classes.section}>
@@ -90,7 +100,12 @@ export default function ProductScreen({ product }) {
                 </Grid>
               </ListItem>
               <ListItem>
-                <Button fullWidth variant='contained' color='primary'>
+                <Button
+                  fullWidth
+                  variant='contained'
+                  color='primary'
+                  onClick={addToCart}
+                >
                   Add to cart
                 </Button>
               </ListItem>
