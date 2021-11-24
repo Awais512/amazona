@@ -30,6 +30,10 @@ const useStyles = makeStyles({
     margin: '0 auto',
     borderRadius: 5,
   },
+  navbarButton: {
+    color: '#ffffff',
+    textTransform: 'initial',
+  },
 });
 
 export default useStyles;
