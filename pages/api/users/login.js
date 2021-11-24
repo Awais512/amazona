@@ -1,7 +1,7 @@
 import nc from 'next-connect';
-import db from '../../../utils/db';
-import User from '../../../models/User';
 import bcrypt from 'bcryptjs';
+import User from '../../../models/User';
+import db from '../../../utils/db';
 import { signToken } from '../../../utils/auth';
 
 const handler = nc();
@@ -20,7 +20,7 @@ handler.post(async (req, res) => {
       isAdmin: user.isAdmin,
     });
   } else {
-    res.status(401).send({ message: 'Invalid User or Password' });
+    res.status(401).send({ message: 'Invalid email or password' });
   }
 });
 
