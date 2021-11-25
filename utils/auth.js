@@ -30,4 +30,12 @@ const isAuth = async (req, res, next) => {
   }
 };
 
-export { signToken, isAuth };
+const isAdmin = async (req, res, next) => {
+  if (req.user.isAdmin) {
+    next();
+  } else {
+    res.status(401).send({ message: 'Only Admin can access this route' });
+  }
+};
+
+export { signToken, isAuth, isAdmin };
