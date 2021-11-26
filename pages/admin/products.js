@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import React, { useEffect, useContext, useReducer } from 'react';
+import Image from 'next/image';
 import {
   CircularProgress,
   Grid,
@@ -109,11 +110,13 @@ function Products() {
                       <TableHead>
                         <TableRow>
                           <TableCell>ID</TableCell>
+                          <TableCell>IMAGE</TableCell>
                           <TableCell>NAME</TableCell>
                           <TableCell>PRICE</TableCell>
                           <TableCell>CATEGORY</TableCell>
                           <TableCell>COUNT</TableCell>
                           <TableCell>RATING</TableCell>
+
                           <TableCell>ACTION</TableCell>
                         </TableRow>
                       </TableHead>
@@ -123,11 +126,21 @@ function Products() {
                             <TableCell>
                               {product._id.substring(20, 24)}
                             </TableCell>
+                            <TableCell>
+                              <Image
+                                width={100}
+                                height={100}
+                                src={product.image}
+                                alt={product.name}
+                              />
+                            </TableCell>
                             <TableCell>{product.name}</TableCell>
                             <TableCell>${product.price}</TableCell>
                             <TableCell>{product.category}</TableCell>
                             <TableCell>{product.countInStock}</TableCell>
+
                             <TableCell>{product.rating}</TableCell>
+
                             <TableCell>
                               <NextLink
                                 href={`/admin/product/${product._id}`}
