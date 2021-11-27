@@ -13,9 +13,22 @@ import {
   Button,
   Menu,
   MenuItem,
+  Box,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  Divider,
+  ListItemText,
 } from '@material-ui/core';
-import NextLink from 'next/link';
+import MenuIcon from '@material-ui/icons/Menu';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { getError } from '../../utils/error';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
+import { useEffect } from 'react';
 
+import NextLink from 'next/link';
 import useStyles from '../../utils/style';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Store } from '../../utils/store';
@@ -76,22 +89,93 @@ const Layout = ({ children, title, description }) => {
   });
 
   const classes = useStyles();
+  const [sidbarVisible, setSidebarVisible] = useState(false);
+  const sidebarOpenHandler = () => {
+    setSidebarVisible(true);
+  };
+  const sidebarCloseHandler = () => {
+    setSidebarVisible(false);
+  };
+
+  const [categories, setCategories] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const fetchCategories = async () => {
+    try {
+      const { data } = await axios.get(`/api/products/categories`);
+      setCategories(data);
+    } catch (err) {
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <div>
       <Head>
-        <title>{title ? `${title} - Amazona` : 'Amazona'}</title>
+        <title>{title ? `${title} - Next Amazona` : 'Next Amazona'}</title>
         {description && <meta name='description' content={description}></meta>}
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AppBar position='static' className={classes.navbar}>
-          <Toolbar>
-            <NextLink href='/' passHref>
-              <Link>
-                <Typography className={classes.brand}>Amazona</Typography>
-              </Link>
-            </NextLink>
+          <Toolbar className={classes.toolbar}>
+            <Box display='flex' alignItems='center'>
+              <IconButton
+                edge='start'
+                aria-label='open drawer'
+                onClick={sidebarOpenHandler}
+              >
+                <MenuIcon className={classes.navbarButton} />
+              </IconButton>
+              <NextLink href='/' passHref>
+                <Link>
+                  <Typography className={classes.brand}>amazona</Typography>
+                </Link>
+              </NextLink>
+            </Box>
+            <Drawer
+              anchor='left'
+              open={sidbarVisible}
+              onClose={sidebarCloseHandler}
+            >
+              <List>
+                <ListItem>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-between'
+                  >
+                    <Typography>Shopping by category</Typography>
+                    <IconButton
+                      aria-label='close'
+                      onClick={sidebarCloseHandler}
+                    >
+                      <CancelIcon />
+                    </IconButton>
+                  </Box>
+                </ListItem>
+                <Divider light />
+                {categories.map((category) => (
+                  <NextLink
+                    key={category}
+                    href={`/search?category=${category}`}
+                    passHref
+                  >
+                    <ListItem
+                      button
+                      component='a'
+                      onClick={sidebarCloseHandler}
+                    >
+                      <ListItemText primary={category}></ListItemText>
+                    </ListItem>
+                  </NextLink>
+                ))}
+              </List>
+            </Drawer>
+
             <div className={classes.grow}></div>
             <div>
               <Switch
@@ -100,16 +184,18 @@ const Layout = ({ children, title, description }) => {
               ></Switch>
               <NextLink href='/cart' passHref>
                 <Link>
-                  {cart.cartItems.length > 0 ? (
-                    <Badge
-                      color='secondary'
-                      badgeContent={cart.cartItems.length}
-                    >
-                      Cart
-                    </Badge>
-                  ) : (
-                    'Cart'
-                  )}
+                  <Typography component='span'>
+                    {cart.cartItems.length > 0 ? (
+                      <Badge
+                        color='secondary'
+                        badgeContent={cart.cartItems.length}
+                      >
+                        Cart
+                      </Badge>
+                    ) : (
+                      'Cart'
+                    )}
+                  </Typography>
                 </Link>
               </NextLink>
               {userInfo ? (
@@ -139,7 +225,7 @@ const Layout = ({ children, title, description }) => {
                         loginMenuCloseHandler(e, '/order-history')
                       }
                     >
-                      Order History
+                      Order Hisotry
                     </MenuItem>
                     {userInfo.isAdmin && (
                       <MenuItem
@@ -155,17 +241,17 @@ const Layout = ({ children, title, description }) => {
                 </>
               ) : (
                 <NextLink href='/login' passHref>
-                  <Link>Login</Link>
+                  <Link>
+                    <Typography component='span'>Login</Typography>
+                  </Link>
                 </NextLink>
               )}
             </div>
           </Toolbar>
         </AppBar>
-
         <Container className={classes.main}>{children}</Container>
-
         <footer className={classes.footer}>
-          <Typography>All Rights Reserved. Amazona</Typography>
+          <Typography>All rights reserved. Next Amazona.</Typography>
         </footer>
       </ThemeProvider>
     </div>
