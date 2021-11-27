@@ -1,27 +1,14 @@
 import React, { useContext } from 'react';
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  Link,
-  List,
-  ListItem,
-  Typography,
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import db from '../utils/db';
 
-import NextLink from 'next/link';
 import Layout from '../components/Layout/Layout';
 
 import Product from '../models/Product';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { Store } from '../utils/store';
-import Rating from '@material-ui/lab/Rating';
+import ProductItem from '../components/ProductItem';
 
 export default function Home({ products }) {
   const router = useRouter();
@@ -45,40 +32,7 @@ export default function Home({ products }) {
       <Grid container spacing={3}>
         {products.map((product) => (
           <Grid item md={4} key={product.name}>
-            <Card>
-              <NextLink href={`/product/${product.slug}`} passHref>
-                <CardActionArea>
-                  <CardMedia
-                    component='img'
-                    image={product.image}
-                    title={product.name}
-                  ></CardMedia>
-                  <CardContent>
-                    <Typography>{product.name}</Typography>
-                    <List>
-                      <ListItem>
-                        <Rating value={product.rating} readOnly></Rating>
-                        <Link href='#reviews'>
-                          <Typography>
-                            ({product.numReviews} reviews)
-                          </Typography>
-                        </Link>
-                      </ListItem>
-                    </List>
-                  </CardContent>
-                </CardActionArea>
-              </NextLink>
-              <CardActions>
-                <Typography>${product.price}</Typography>
-                <Button
-                  size='small'
-                  color='primary'
-                  onClick={() => addToCart(product)}
-                >
-                  Add to cart
-                </Button>
-              </CardActions>
-            </Card>
+            <ProductItem product={product} addToCartHandler={addToCart} />
           </Grid>
         ))}
       </Grid>

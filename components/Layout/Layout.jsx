@@ -144,7 +144,7 @@ const Layout = ({ children, title, description }) => {
               </IconButton>
               <NextLink href='/' passHref>
                 <Link>
-                  <Typography className={classes.brand}>amazona</Typography>
+                  <Typography className={classes.brand}>Amazona</Typography>
                 </Link>
               </NextLink>
             </Box>

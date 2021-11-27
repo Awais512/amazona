@@ -57,12 +57,16 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
   },
   menuButton: { padding: 0 },
+  mt1: { marginTop: '1rem' },
   // search
   searchSection: {
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
+  },
+  sort: {
+    marginRight: 5,
   },
   searchForm: {
     border: '1px solid #ffffff',
